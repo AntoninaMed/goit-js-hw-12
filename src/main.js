@@ -58,6 +58,7 @@ async function onFormSubmit(e) {
 async function onLoadMoreClick() {
   page += 1;
   showLoader();
+  try{
   const data = await fetchData(query, page);
   renderImgs(data.hits);
   showLightBox();
@@ -68,7 +69,10 @@ async function onLoadMoreClick() {
   scrollBy({
     behavior: 'smooth',
     top: height * 2,
-  });
+  }); } catch (err) {
+    showError(err);
+  }
+  hideLoader();
 }
 
 function renderImgs(hits) {
@@ -90,9 +94,10 @@ function showLightBox() {
     captionPosition: 'bottom',
     captionsData: 'alt',
   });
-  lightbox.on('show.simplelightbox');
-  lightbox.refresh();
-}
+
+lightbox.on('show.simplelightbox', function() {
+  console.log('Lightbox is shown'); 
+});}
 
 function showError(msg) {
   iziToast.error({
@@ -116,3 +121,4 @@ function checkBtnVisibleStatus() {
     showLoadBtn();
   }
 }
+checkBtnVisibleStatus();
